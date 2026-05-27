@@ -125,7 +125,7 @@ The system uses the `hostel_management` database with the following tables:
 
 **1. Clone or download the project**
 ```bash
-git clone https://github.com/your-username/hostel-harmony-system.git
+git clone https://github.com/mansi153-wq/Hostel_Harmony_System.git
 ```
 Or download the ZIP and extract it.
 
