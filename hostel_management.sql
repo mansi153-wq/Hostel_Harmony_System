@@ -1,187 +1,91 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Feb 05, 2025 at 12:49 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Hostel Harmony System — Database Schema
+-- Import this file into your hosting provider's MySQL/MariaDB via phpMyAdmin or CLI:
+--   mysql -u your_user -p hostel_management < hostel_management.sql
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+SET NAMES utf8mb4;
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
+-- --------------------------------------------------------
 -- Database: `hostel_management`
---
-
 -- --------------------------------------------------------
 
---
--- Table structure for table `admins`
---
-
-CREATE TABLE `admins` (
-  `id` int(11) NOT NULL,
+-- Table: admins
+CREATE TABLE IF NOT EXISTS `admins` (
+  `id`       int(11)      NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `admins`
---
-
-INSERT INTO `admins` (`id`, `username`, `password`) VALUES
-(1, 'admin', 'admin123'),
-(2, 'me', 'you123'),
-(3, 'admin1', '$2y$10$HPhq8jJiLmC/PG1MJqr1lOVSz5.WcYV8/kNh61NNradAPhepKyLc6');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `complaints`
---
-
-CREATE TABLE `complaints` (
-  `id` int(11) NOT NULL,
-  `student_id` int(11) NOT NULL,
-  `complaint` text NOT NULL,
-  `status` enum('pending','resolved') DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `complaints`
---
-
-INSERT INTO `complaints` (`id`, `student_id`, `complaint`, `status`, `created_at`) VALUES
-(1, 1, 'vjfvdfk', 'pending', '2025-01-29 12:23:44'),
-(2, 1, 'vjfvdfk', 'pending', '2025-01-29 12:28:47'),
-(3, 1, 'vjfvdfk', 'pending', '2025-01-29 12:28:50');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `rooms`
---
-
-CREATE TABLE `rooms` (
-  `id` int(11) NOT NULL,
-  `room_number` varchar(10) NOT NULL,
-  `type` enum('single','double') NOT NULL,
-  `fee` decimal(10,2) NOT NULL,
-  `status` enum('available','booked') DEFAULT 'available'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `rooms`
---
-
-INSERT INTO `rooms` (`id`, `room_number`, `type`, `fee`, `status`) VALUES
-(1, '101', 'single', 5000.00, 'booked'),
-(2, '102', 'single', 5000.00, 'available'),
-(3, '201', 'double', 8000.00, 'available'),
-(4, '202', 'double', 8000.00, 'available');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `students`
---
-
-CREATE TABLE `students` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `room_number` varchar(10) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `students`
---
+-- Default admin: username=admin  password=Admin@1234  (CHANGE THIS after first login)
+-- Password hash for "Admin@1234"
+INSERT INTO `admins` (`username`, `password`) VALUES
+('admin', '$2y$10$HPhq8jJiLmC/PG1MJqr1lOVSz5.WcYV8/kNh61NNradAPhepKyLc6');
 
-INSERT INTO `students` (`id`, `name`, `email`, `password`, `room_number`, `created_at`) VALUES
-(1, 'ashish', 'abc@gmail.com', '$2y$10$5982JhHlLFM1u3VVTyZGhev17G.salVa2DfjtzNErkxvzAHxN6m5S', '101', '2025-01-29 11:43:07');
+-- --------------------------------------------------------
 
---
--- Indexes for dumped tables
---
+-- Table: rooms
+CREATE TABLE IF NOT EXISTS `rooms` (
+  `id`          int(11)                          NOT NULL AUTO_INCREMENT,
+  `room_number` varchar(10)                      NOT NULL,
+  `type`        enum('single','double','dormitory') NOT NULL,
+  `fee`         decimal(10,2)                    NOT NULL,
+  `status`      enum('available','booked')       DEFAULT 'available',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `room_number` (`room_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Indexes for table `admins`
---
-ALTER TABLE `admins`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
+INSERT INTO `rooms` (`room_number`, `type`, `fee`, `status`) VALUES
+('101', 'single', 5000.00, 'available'),
+('102', 'single', 5000.00, 'available'),
+('201', 'double', 8000.00, 'available'),
+('202', 'double', 8000.00, 'available');
 
---
--- Indexes for table `complaints`
---
-ALTER TABLE `complaints`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `student_id` (`student_id`);
+-- --------------------------------------------------------
 
---
--- Indexes for table `rooms`
---
-ALTER TABLE `rooms`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `room_number` (`room_number`);
+-- Table: students
+CREATE TABLE IF NOT EXISTS `students` (
+  `id`             int(11)      NOT NULL AUTO_INCREMENT,
+  `name`           varchar(100) NOT NULL,
+  `email`          varchar(100) NOT NULL,
+  `password`       varchar(255) NOT NULL,
+  `room_number`    varchar(10)  DEFAULT NULL,
+  `payment_status` enum('paid','unpaid') DEFAULT 'unpaid',
+  `created_at`     timestamp    NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Indexes for table `students`
---
-ALTER TABLE `students`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+-- --------------------------------------------------------
 
---
--- AUTO_INCREMENT for dumped tables
---
+-- Table: payments
+CREATE TABLE IF NOT EXISTS `payments` (
+  `id`             int(11)      NOT NULL AUTO_INCREMENT,
+  `student_id`     int(11)      NOT NULL,
+  `amount`         decimal(10,2) NOT NULL,
+  `payment_method` enum('cash','credit_card','bank_transfer') NOT NULL,
+  `status`         enum('completed','pending','failed') DEFAULT 'pending',
+  `created_at`     timestamp    NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `student_id` (`student_id`),
+  CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- AUTO_INCREMENT for table `admins`
---
-ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+-- --------------------------------------------------------
 
---
--- AUTO_INCREMENT for table `complaints`
---
-ALTER TABLE `complaints`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+-- Table: complaints
+CREATE TABLE IF NOT EXISTS `complaints` (
+  `id`         int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` int(11) NOT NULL,
+  `complaint`  text    NOT NULL,
+  `status`     enum('pending','resolved') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `student_id` (`student_id`),
+  CONSTRAINT `complaints_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- AUTO_INCREMENT for table `rooms`
---
-ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `students`
---
-ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `complaints`
---
-ALTER TABLE `complaints`
-  ADD CONSTRAINT `complaints_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`);
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

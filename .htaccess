@@ -1,0 +1,28 @@
+# Hostel Harmony System — Apache configuration
+
+# Prevent directory listing
+Options -Indexes
+
+# Deny access to sensitive files
+<FilesMatch "\.(sql|env|log|md|git)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect the includes folder from direct access
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block direct access to includes/
+    RewriteRule ^includes/.*$ - [F,L]
+
+    # Redirect all HTTP to HTTPS (uncomment when SSL is set up on your host)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Set default character set
+AddDefaultCharset UTF-8
+
+# Disable server signature
+ServerSignature Off

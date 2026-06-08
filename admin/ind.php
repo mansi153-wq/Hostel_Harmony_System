@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: ../adlogin.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,12 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: rgb(245, 243, 223);
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: rgb(245,243,223); }
         .sidebar {
             width: 250px;
             height: 100vh;
@@ -19,9 +21,7 @@
             position: fixed;
             padding-top: 20px;
         }
-        .sidebar h2 {
-            text-align: center;
-        }
+        .sidebar h2 { text-align: center; }
         .sidebar a {
             display: block;
             color: white;
@@ -31,13 +31,8 @@
             margin: 5px 0;
             text-align: center;
         }
-        .sidebar a:hover {
-            background: #575757;
-        }
-        .main-content {
-            margin-left: 260px;
-            padding: 20px;
-        }
+        .sidebar a:hover { background: #575757; }
+        .main-content { margin-left: 260px; padding: 20px; }
         .header {
             display: flex;
             align-items: center;
@@ -47,36 +42,30 @@
             font-size: 25px;
             padding: 30px 60px;
             position: relative;
-            width: 100%;
             min-height: 120px;
             box-sizing: border-box;
         }
         .header img {
-            width: 120px;
-            height: 120px;
-            border-radius: 60%;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
             position: absolute;
             left: 20px;
             top: 50%;
             transform: translateY(-50%);
         }
-        .header h2 {
-            flex-grow: 1;
-            text-align: center;
-            margin: 0;
-        }
+        .header h2 { flex-grow: 1; text-align: center; margin: 0; }
     </style>
 </head>
 <body>
     <div class="header">
-        <img src="logo.png" alt="Logo">
+        <img src="../img/logo.png" alt="Logo">
         <h2>Admin Dashboard</h2>
     </div>
     <div class="sidebar">
         <h2>Menu</h2>
         <a href="register_student.php">Register Student</a>
         <a href="manage_rooms1.php">Manage Rooms</a>
-        <a href="update_complaint_status">Update Complaints</a>
         <a href="view_students.php">View Students</a>
         <a href="view_complaints2.php">View Complaints</a>
         <a href="../logout.php">Logout</a>
